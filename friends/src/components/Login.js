@@ -13,7 +13,7 @@ class Login extends React.Component {
     this.setState({
       credentials: {
         ...this.state.credentials,
-        [e.target.value]: e.target.value,
+        [e.target.name]: e.target.value,
       },
     });
   };
@@ -28,13 +28,14 @@ class Login extends React.Component {
         localStorage.setItem("token", res.data.payload);
         // "protected is the <Link to="/protected">Protected Page</Link> @ App.js
         this.props.history.push("/protected");
-      });
+      })
+      .catch((err) => console.log({ err }));
   };
 
   render() {
     return (
       <div>
-        <form>
+        <form onSubmit={this.login}>
           <h1>Login</h1>
           <input
             placeholder="Username"
