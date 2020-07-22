@@ -21,7 +21,7 @@ export function FriendsList(props) {
                return <Friend item={item} key={index} />
 
            }):
-            <h3>Loading</h3>
+            <h3>Loading Friends...</h3>
            }
         </div>
     )
