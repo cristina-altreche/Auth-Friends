@@ -1,55 +1,53 @@
-import React, { useState } from "react";
-import { connect } from "react-redux";
-import { newFriend } from "../actions";
+  
+import React, {useState} from 'react'
+import {axiosWithAuth} from '../utils/axiosWithAuth'
 
-const NewFriend = props => {
-  const [friend, setFriend] = useState({ name: "", age: "", email: "" });
-
-  const handleChange = (e) => {
-    setFriend({ ...friend, [e.target.name]: e.target.value });
-  };
-
-  const inputValues = (e) => {
-    e.preventDefault();
-    props.newFriend(friend);
-    setFriend({
-      name: "",
-      age: "",
-      email: "",
+export function NewFriend(props) {
+    const [friend, setFriend] = useState({
+        id: Date.now(),
+        name: '',
+        age: '',
+        email: ''
     })
-  }
 
-  return (
-    <form onSubmit={inputValues}>
-      <input
-        type="text"
-        name="name"
-        id="fname"
-        onChange={handleChange}
-        value={friend.name}
-        placeholder="Friend Name"
-      />
+    const handleChange = (e) => {
+      setFriend({ ...friend, [e.target.name]: e.target.value });
+    };
+  
 
-      <input
-        type="number"
-        name="age"
-        id="fage"
-        onChange={handleChange}
-        value={friend.age}
-        placeholder="Friend Age"
-      />
+    return(
+        <form onSubmit={(e) => {
+            e.preventDefault()
+            axiosWithAuth()
+                .post('/api/friends', friend)
+                .then(res => {
+                    console.log(res)
+                    props.history.push('/friendslist')
+                })
+                .catch(err => console.log(err))
 
-      <input
-      type="email"
-      name="email"
-      id="femail"
-      onChange={handleChange}
-      value={friend.email}
-      placeholder="Email"
-      />
-      <button onClick={inputValues}>Add Friend</button>
-    </form>
-  );
-};
+        }}>
+            <input
+            name='name'
+            placeholder='Name'
+            value={friend.name}
+            onChange={handleChange}
+            />
+            <input
+            name='age'
+            type="number"
+            placeholder='Age'
+            value={friend.age}
+            onChange={handleChange}
+            />
+            <input
+            name='email'
+            placeholder='Email'
+            value={friend.email}
+            onChange={handleChange}
+            />
+            <button type='submit'>Add Friend</button>
 
-export default connect(null, {newFriend})(NewFriend)
+        </form>
+    )
+}

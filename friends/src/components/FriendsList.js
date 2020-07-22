@@ -1,46 +1,31 @@
-import React, {useEffect} from "react";
-import { connect } from 'react-redux'
-import { getFriend } from "../actions";
-import Friend from './Friend'
-import NewFriend from './NewFriend'
+  
+import React, { useState, useEffect } from 'react'
+import { axiosWithAuth } from '../utils/axiosWithAuth'
+import { Friend } from './Friend'
 
+export function FriendsList(props) {
+    const [friends, setFriends] = useState()
 
-const FriendsList = ({getFriend, friends, error, isLoading}) => {
-
-    useEffect(() => {
-       getFriend()
-    }, [getFriend])
-
-
-    if(isLoading) {
-        return <h3>Loading Friends...</h3>
-    }
-
-    return (
-    
+  useEffect(() => {
+    localStorage.getItem('token') &&
+    axiosWithAuth().get('/api/friends')
+      .then(res => {
+        setFriends(res.data)
+      })
+      .catch(err => console.log(err))
+  }, [])
+  console.log(friends)
+    return(
         <div>
-            {/* {error && <p>{error}</p>} */}
-            {friends.map(friend => (
-                <Friend friend={friend}/>
-            ))}  
+           {friends ? friends.map((item, index) => {
+               return <Friend item={item} key={index} />
+
+           }):
+            <h3>Loading</h3>
+           }
         </div>
-         
-    
     )
-}
-
-const mapStateToProps = function(state) {
-    return {
-        friends: state.friends,
-        isLoading: state.isLoading,
-        error: state.error
-    }
-}
-
-export default connect(mapStateToProps, {getFriend})(FriendsList)
-
-
-
+} 
 
 ///BEFORE MOVING AXIOS TO ACTIONS
 // const Friends = () => {
@@ -52,7 +37,7 @@ export default connect(mapStateToProps, {getFriend})(FriendsList)
 //         .then(res => {
 //             console.log(res.data)
 //             setFriend(res.data)
-            
+
 //         })
 //         .catch(err => console.log(err))
 //     }, [])
@@ -74,6 +59,3 @@ export default connect(mapStateToProps, {getFriend})(FriendsList)
 // }
 
 // export default Friends
-
-
-

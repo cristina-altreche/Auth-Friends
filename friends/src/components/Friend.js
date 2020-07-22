@@ -1,15 +1,13 @@
+  
 import React from 'react'
 
-const Friend = ({ friend }) => {
-    return (
-        <>
-            <div>
-                <p>Name: {friend.name}</p>
-                <p>Age: {friend.age}</p>
-                <p>Email: {friend.email}</p>
-            </div>
-        </>
+export function Friend(props) {
+    console.log(props)
+    return(
+        <div>
+            <h2>{props.item.name}</h2>
+            <p>Age:  {props.item.age} </p>
+            <p>Email: {props.item.email} </p>
+        </div>
     )
-}
-
-export default Friend
+} 

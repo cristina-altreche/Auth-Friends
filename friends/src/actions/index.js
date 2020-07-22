@@ -27,11 +27,13 @@ export const NEW_FRIEND_START = "NEW_FRIEND_START";
 export const NEW_FRIEND_SUCCESS = "NEW_FRIEND_SUCCESS";
 export const NEW_FRIEND_FAILED = "NEW_FRIEND_FAILED";
 
-export const newFriend = (friend) => (dispatch) => {
+export const newFriend = (friend) => {
+    return(dispatch) => {
   dispatch({ type: NEW_FRIEND_START });
 
-  return axios
+  axios
     .post("http://localhost:5000/api/friends", friend)
     .then((res) => dispatch({ type: NEW_FRIEND_SUCCESS, payload: res.data }))
     .catch((err) => dispatch({ type: NEW_FRIEND_FAILED, payload: err }));
 };
+}

@@ -1,61 +1,51 @@
-import React from "react";
-import axios from "axios";
+import React, {useState, useEffect} from 'react'
+import axios from 'axios'
+import {axiosWithAuth} from '../utils/axiosWithAuth'
 
-class Login extends React.Component {
-  state = {
-    credentials: {
-      username: "",
-      password: "",
-    },
-  };
 
-  handleChange = (e) => {
-    this.setState({
-      credentials: {
-        ...this.state.credentials,
-        [e.target.name]: e.target.value,
-      },
-    });
-  };
+export function Login(props) {
+    const [form, setForm] = useState({
+        username: '',
+        password: ''
+    })
 
-  login = (e) => {
-    e.preventDefault();
+    const handleSubmit = () => {
+        axiosWithAuth().post('/api/login', form)
+        .then(res => {
+            console.log(res)
+            localStorage.setItem('token', res.data.payload)
+            props.history.push('/friendslist')
+        })
+        .catch(err => console.error('hey',err))
 
-    axios
-      .post("http://localhost:5000/api/login", this.state.credentials)
-      .then((res) => {
-        console.log(res);
-        localStorage.setItem("token", res.data.payload);
-        // "protected is the <Link to="/protected">Protected Page</Link> @ App.js
-        this.props.history.push("/protected");
-      })
-      .catch((err) => console.log({ err }));
-  };
 
-  render() {
+    }
+
+
     return (
-      <div>
-        <form onSubmit={this.login}>
-          <h1>Login</h1>
-          <input
-            placeholder="Username"
-            type="text"
-            name="username"
-            value={this.state.credentials.username}
-            onChange={this.handleChange}
-          />
-          <input
-            placeholder="Password"
-            type="password"
-            name="password"
-            value={this.state.credentials.password}
-            onChange={this.handleChange}
-          />
-          <button>Login</button>
+        <form onSubmit={(e) => {
+            e.preventDefault()
+            handleSubmit()
+        }}>
+            <input
+                type='text'
+                name='username'
+                placeholder='User Name'
+                value={form.name}
+                onChange={(e) => {
+                    setForm({...form, [e.target.name]: e.target.value})
+                }}
+            />
+            <input
+                type='password'
+                name='password'
+                placeholder='Password'
+                value={form.password}
+                onChange={(e) => {
+                    setForm({...form, [e.target.name]: e.target.value})
+                }}
+            />
+           <button type='submit'>Login</button>
         </form>
-      </div>
-    );
-  }
-}
-
-export default Login;
+    )
+} 
