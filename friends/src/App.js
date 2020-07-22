@@ -1,8 +1,7 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import {Route} from 'react-router-dom'
 import  { Login  } from './components/Login'
 import Navigation from './components/Navigation'
-
 import { FriendsList } from './components/FriendsList'
 import { NewFriend } from './components/NewFriend'
 import PrivateRoute from './utils/PrivateRoute'
